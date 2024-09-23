@@ -1,20 +1,39 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { Container, Button, Row, Col } from 'react-bootstrap';
 import { motion, AnimatePresence } from 'framer-motion';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import talkingGif from './assets/talking.gif'
-import bicycleGif from './assets/bikeconveyer.gif'
-import customerGif from './assets/customerrelation.gif'
+
+import talkingGif from './assets/images/talking.gif'
+import bicycleGif from './assets/images/bikeconveyer.gif'
+import customerGif from './assets/images/customerrelation.gif'
+import iaLogo from './assets/images/ia-logo.svg'
+import interviewGif from './assets/images/interviewRoom.gif'
+import lionLairGif from './assets/images/lionsLair.gif'
 
 const rooms = [
-    { id: 1, name: 'Room 1', text: 'Welcome to Room 1', img: talkingGif },
-    { id: 2, name: 'Room 2', text: 'This is Room 2', img: bicycleGif },
-    { id: 3, name: 'Room 3', text: 'You are now in Room 3', img: customerGif },
+    { id: 1, name: 'Group Discussion', text: '/talkingPageText.txt', img: talkingGif },
+    { id: 2, name: 'Bicycle Manufacturing', text: '/bicycleManufacturingText.txt', img: bicycleGif },
+    { id: 3, name: 'Customer Relations', text: '/crText.txt', img: customerGif },
+    { id: 4, name: 'Interview Room', text: '/hiringText.txt', img: interviewGif },
+    { id: 5, name: 'Lions Lair', text: '/pitchText.txt', img: lionLairGif },
 ];
 
 const App: React.FC = () => {
     const [currentRoomIndex, setCurrentRoomIndex] = useState(0);
     const totalRooms = rooms.length;
+    const [currentRoomTxt, setRoomTxt] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        setLoading(true)
+        setRoomTxt('');
+        fetch(rooms[currentRoomIndex].text)
+            .then(response => response.text())
+            .then(text => {
+                setRoomTxt(text);
+                setLoading(false);
+            });
+    },[currentRoomIndex, setRoomTxt])
 
     // Navigate to the previous room
     const handlePrevRoom = () => {
@@ -28,7 +47,8 @@ const App: React.FC = () => {
 
     return (
         <Container className="text-center mt-5 minimalistic-container">
-            <h1 className="mb-4">Innovation Academy | VR Reflection</h1>
+            <img className="IA-logo" src={iaLogo} alt={"Innovation Academy Logo"}/>
+            <h1 className="mb-4">VR Reflection</h1>
 
             <div className="room-navigation">
                 <Row className="align-items-center justify-content-center">
@@ -48,19 +68,36 @@ const App: React.FC = () => {
                                 transition={{duration: 0.5}}
                                 className="room-container"
                             >
-                                <img
-                                    src={rooms[currentRoomIndex].img}
-                                    alt={rooms[currentRoomIndex].name}
-                                    className="img-fluid"
-                                    width={375}
-                                />
-                                <h3 className="mt-3">{rooms[currentRoomIndex].name}</h3>
-                                <p>{rooms[currentRoomIndex].text}</p>
-                            </motion.div>
-                        </AnimatePresence>
-                    </Col>
+                                {loading && <>
+                                    <div className="spinner-border" role="status">
+                                        <span className="sr-only"></span>
+                                    </div>
+                                </>}
 
-                    <Col xs={2}>
+                                {!loading && <>
+                                    <img
+                                        src={rooms[currentRoomIndex].img}
+                                        alt={rooms[currentRoomIndex].name}
+                                        className="img-fluid"
+                                        width={375}
+                                    />
+                                    <h3 className="mt-3">{rooms[currentRoomIndex].name}</h3>
+
+                                    <p>
+                                        {currentRoomTxt.split('\n').map((line, index) => (
+                                            <span key={index}>
+                                                {line}
+                                                <br/>
+                                            </span>
+                                        ))}
+                                    </p>
+                                </>}
+
+                                </motion.div>
+                                    </AnimatePresence>
+                                    </Col>
+
+                                    <Col xs={2}>
                         <Button variant="dark" onClick={handleNextRoom} className="arrow-button">
                             {"→"}
                         </Button>

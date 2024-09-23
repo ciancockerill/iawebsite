@@ -5,6 +5,14 @@ body {
   color: #333;
 }
 
+.IA-logo {
+  filter: invert(10%) sepia(91%) saturate(7021%) hue-rotate(320deg) brightness(91%) contrast(101%);
+  width: 50%;
+  padding: 20px;
+  display: block;
+  margin: auto
+}
+
 /* Container styling */
 .minimalistic-container {
   background-color: #ffffff;
@@ -15,34 +23,20 @@ body {
   margin: 0 auto;
 }
 
-/* Arrow button styling */
-.arrow-button {
-  font-size: 2rem;
-  color: #333;
-  padding: 0;
-  border: none;
-}
-
-.arrow-button:hover {
-  color: #e5007d; /* Pink from the logo */
-}
-
-/* Title styling */
 h1 {
   font-weight: bold;
   font-size: 2.5rem;
   color: #e5007d; /* Pink from the logo */
   border-bottom: 4px solid #e5007d;
-  display: inline-block;
   padding-bottom: 10px;
+  display: inline-block;
 }
 
-/* Room container styling */
 .room-container {
   text-align: center;
 }
 
-img {
+img:not(.IA-logo){
   border-radius: 8px;
   border: 2px solid #0056a3; /* Blue from the logo */
 }
